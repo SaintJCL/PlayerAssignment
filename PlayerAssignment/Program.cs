@@ -31,6 +31,18 @@ namespace PlayerAssignment
             public string Email { get { return _email; } set { _email = value; } }
 
             public delegate void PrintPlayerInfo(Player p);
+            public Player() { }
+            public Player(string name, int age, string mail)
+            {
+                Name = name;
+                Age = age;
+                Email = mail;
+            }
+
+            public void Print(PrintPlayerInfo printPlayer, Player player)
+            {
+                printPlayer(player);
+            }
 
         }
 
@@ -45,30 +57,40 @@ namespace PlayerAssignment
 
             for(int i = 0; i<plNum; i++) //Player inputs their information.
             {
-                
-                Console.WriteLine("Enter the data for Player " + (i + 1) + ", as prompted. \n Name:");
+                players[i] = new Player();
+
+                Console.WriteLine("Enter the data for Player " + (i + 1) + ", as prompted. \n Name: ");
                 players[i].Name = Console.ReadLine();
                 Console.WriteLine("Age:");
                 players[i].Age = Int32.Parse(Console.ReadLine());
-                do {
+                do {                                  //Checks to see if the e-mail entered is valid.
                     Console.WriteLine("E-mail:");
                     players[i].Email = Console.ReadLine();
-                }
 
+                    if (!Regex.IsMatch(players[i].Email, pattern))
+                        Console.Write("VALID E-mail, you blockhead.");
+                }
                 while (!Regex.IsMatch(players[i].Email,pattern));
-                Console.WriteLine("valid");
 
             }
 
-            Console.WriteLine("would you like to print the data? Press y+Enter for yes. If not, \n press another key+ Enter");
+            Console.WriteLine("would you like to print the data? Press y for yes. If not, \n press another key+ Enter");
             if (Console.ReadKey().Equals('y'))
             {
-                for (int i = 0; i < plNum; i++) //Placeholder until I figure out the delegates
+                for (int i = 0; i < plNum; i++) //Prints out all of the information for each player.
                 {
-                    Console.WriteLine("Name: " + players[i].Name + "\nID:" + players[i].Id +
-                        "\nAge:" + players[i].Age + "\nE-mail: " + players[i].Email);
+                    players[i].Print(PrintPlayerNameIdMail, players[i]);
+                    Console.WriteLine("\n");
                 }
             }
+
+        }
+
+        private static void PrintPlayerNameIdMail(Player pl)
+        {
+            Console.WriteLine($"player name is: {pl.Name}");
+            Console.WriteLine($"player id is: {pl.Id}");
+            Console.WriteLine($"player e-Mail is: {pl.Email}");
         }
     }
   
